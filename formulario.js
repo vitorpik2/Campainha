@@ -3,6 +3,7 @@ const canvas = document.getElementById('canvas');
 const contexto = canvas.getContext('2d');
 let imagemCapturada = '';
 
+// Iniciar a câmera
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         video.srcObject = stream;
@@ -11,6 +12,12 @@ navigator.mediaDevices.getUserMedia({ video: true })
         alert('Erro ao acessar a câmera: ' + erro);
     });
 
+// Carregar os modelos da face-api.js
+async function carregarModelosFaceAPI() {
+    await faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+}
+carregarModelosFaceAPI();
+
 function limparFormulario() {
     document.getElementById('nome').value = '';
     document.getElementById('mensagem').value = '';
@@ -18,7 +25,17 @@ function limparFormulario() {
     imagemCapturada = '';
 }
 
-function tirarFoto() {
+// Tirar foto com verificação de rosto
+async function tirarFoto() {
+    // Detectar rosto no vídeo
+    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+
+    if (detections.length === 0) {
+        alert("Nenhum rosto detectado. Posicione-se na frente da câmera.");
+        return;
+    }
+
+    // Se rosto for detectado, capturar imagem
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     contexto.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -36,7 +53,6 @@ async function enviarFormulario() {
         return;
     }
 
-    // Atualiza o card local em forma de pop-up
     const popup = document.getElementById('popup');
     const resultadoDiv = document.getElementById('resultado');
 
@@ -49,7 +65,6 @@ async function enviarFormulario() {
 
     popup.classList.remove('hidden');
 
-    // 🔔 Armazena no localStorage
     localStorage.setItem("campainha", JSON.stringify({
         nome,
         mensagem,
@@ -57,18 +72,9 @@ async function enviarFormulario() {
         data: Date.now()
     }));
 
-    // Envia para o Telegram
     await enviarMensagem(nome, mensagem, imagemCapturada);
 }
 
-// fecha o pop-up
 function fecharPopup() {
     document.getElementById('popup').classList.add('hidden');
 }
-
-localStorage.setItem("campainha", JSON.stringify({
-    nome,
-    mensagem,
-    imagem: imagemCapturada,
-    data: Date.now()
-}));
