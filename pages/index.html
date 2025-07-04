@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tocar campainha</title>
+    <style>
+
+    </style>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <div class="tudo">
+        <div class="titulo">
+            <h1>Campainha Web</h1>
+        </div>
+
+        <div class="principal">
+            <div class="tela">
+                <!-- Foto -->
+                <video id="video" autoplay></video>
+            </div>
+
+            <div class="interativos">
+                <div class="campos">
+                    <p>Nome:</p>
+                    <!-- Nome da pessoa -->
+                    <input type="text" id="nome" placeholder="Nome da pessoa" />
+                    <p>Mensagem:</p>
+                    <!-- Mensagem -->
+                    <textarea id="mensagem" placeholder="Escreva uma mensagem"></textarea>
+                </div>
+            </div>
+
+            <div class="botoes">
+                <!-- Tirar foto botao-->
+                <button onclick="tirarFoto()">Tirar Foto</button>
+                <!-- Botao enviar, quando clicar vai mandar a mensagem com o telegram e para a residencia -->
+                <button id="btnEnviar" onclick="enviarFormulario()">Enviar</button>
+            </div>
+        </div>
+
+        <!-- permitir o uso da camera -->
+        <canvas id="canvas" style="display: none;"></canvas>
+        <!-- card de chamada -->
+        <div id="popup" class="popup hidden">
+            <div class="popup-content">
+                <button class="fechar" onclick="fecharPopup()">Fechar</button>
+                <div id="resultado"></div>
+            </div>
+        </div>
+
+
+        <!-- links -->
+        <script src="../js/formulario.js"></script>
+        <script src="../js/notify.js"></script>
+    </div>
+</body>
+
+</html>
